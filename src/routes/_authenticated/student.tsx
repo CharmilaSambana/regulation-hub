@@ -70,6 +70,17 @@ function StudentPage() {
     },
   });
 
+  const filteredMaterials = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const list = materials.data ?? [];
+    if (!q) return list;
+    return list.filter((m) => {
+      const subject = m.subjects as { name: string; code: string } | null;
+      return [m.title, subject?.name, subject?.code]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q));
+    });
+  }, [materials.data, search]);
 
 
   const myEvents = useQuery({
