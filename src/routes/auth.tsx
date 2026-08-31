@@ -141,16 +141,17 @@ function AuthPage() {
               </h1>
               <p className="text-sm text-muted-foreground">
                 {isAdmin
-                  ? "Sign in with the administrator account."
+                  ? "Only the approved administrator email gets admin access."
                   : "Register if you're new, otherwise sign in."}
               </p>
             </div>
           </div>
 
           <Tabs defaultValue="login" className="mt-6">
-            <TabsList className={`grid w-full ${isAdmin ? "grid-cols-1" : "grid-cols-2"}`}>
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
-              {isAdmin ? null : <TabsTrigger value="register">Register</TabsTrigger>}
+              <TabsTrigger value="register">Register</TabsTrigger>
+
             </TabsList>
 
             <TabsContent value="login">
