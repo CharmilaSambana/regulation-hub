@@ -181,22 +181,44 @@ function StudentPage() {
         </section>
 
         <section className="mt-8">
-          <h2 className="font-display text-lg font-semibold text-foreground">
-            Shared materials {regulation ? `for ${regulation}` : ""}
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="font-display text-lg font-semibold text-foreground">
+              Shared materials {regulation ? `for ${regulation}` : ""}
+            </h2>
+            {regulation ? (
+              <div className="relative w-full max-w-xs">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search regulation code…"
+                  aria-label="Search subject regulation code"
+                  maxLength={60}
+                  className="pl-9"
+                />
+              </div>
+            ) : null}
+          </div>
 
           {!regulation ? (
             <EmptyState text="Select your regulation above to see the PDFs shared with your batch." />
           ) : materials.isLoading ? (
             <CenteredSpinner />
-          ) : (materials.data?.length ?? 0) === 0 ? (
-            <EmptyState text="No PDFs have been shared for this regulation yet." />
+          ) : (filteredMaterials?.length ?? 0) === 0 ? (
+            <EmptyState
+              text={
+                search.trim()
+                  ? `No PDFs match "${search.trim()}".`
+                  : "No PDFs have been shared for this regulation yet."
+              }
+            />
           ) : (
             <div className="mt-4 grid gap-4">
-              {materials.data!.map((m) => {
+              {filteredMaterials!.map((m) => {
                 const seen = myEvents.data?.some(
                   (e) => e.material_id === m.id && e.event_type === "view",
                 );
+
                 const subject = m.subjects as { name: string; code: string } | null;
                 const teacherName =
                   teachers.data?.find((t) => t.id === m.teacher_id)?.full_name || "Faculty";
